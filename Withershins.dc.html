@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #050308; }
+  a { color: #e6c877; }
+  a:hover { color: #ffe6a6; }
+  @keyframes wsflick { 0%{transform:scale(1) rotate(-1deg);opacity:.95} 25%{transform:scale(1.08,.92) rotate(1deg);opacity:1} 50%{transform:scale(.94,1.1) rotate(-1deg);opacity:.9} 75%{transform:scale(1.05,.96) rotate(1deg);opacity:1} 100%{transform:scale(1) rotate(-1deg);opacity:.95} }
+  @keyframes wsglow { 0%,100%{opacity:.5} 50%{opacity:.95} }
+  @keyframes wsbanner { 0%{opacity:0;transform:translateY(14px) scale(.96);letter-spacing:.02em} 15%{opacity:1;transform:translateY(0) scale(1)} 82%{opacity:1} 100%{opacity:0;transform:translateY(-8px)} }
+  @keyframes wsfloat { 0%{opacity:0;transform:translateY(6px) scale(.7)} 18%{opacity:1;transform:translateY(-4px) scale(1.15)} 40%{transform:translateY(-10px) scale(1)} 100%{opacity:0;transform:translateY(-34px) scale(.9)} }
+  @keyframes wsreveal { 0%{opacity:0;transform:translateY(10px) rotateX(-40deg) scale(.9)} 100%{opacity:1;transform:translateY(0) rotateX(0) scale(1)} }
+  @keyframes wsburst { 0%{opacity:0;transform:scale(.2)} 30%{opacity:1} 100%{opacity:0;transform:scale(2.4)} }
+  @keyframes wsrise { 0%{opacity:0;transform:translateY(18px)} 100%{opacity:1;transform:translateY(0)} }
+  @keyframes wsspark { 0%{opacity:0;transform:translateY(2px) scaleY(.4)} 15%{opacity:1} 100%{opacity:0;transform:translateY(-42px) scaleY(1.1)} }
+  @keyframes wslaugh { 0%,100%{transform:translate(-50%,-50%) rotate(-3deg) scale(1)} 50%{transform:translate(-50%,-50%) rotate(3deg) scale(1.07)} }
+  @keyframes wstime { 0%,100%{opacity:1} 50%{opacity:.4} }
+  @keyframes wsflash { 0%{opacity:0} 4%{opacity:.95} 9%{opacity:.15} 14%{opacity:.9} 20%{opacity:.12} 34%{opacity:.5} 60%{opacity:.28} 100%{opacity:0} }
+  @keyframes wspulse { 0%,100%{opacity:.45} 50%{opacity:.9} }
+  ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#3a2a4a;border-radius:8px}
+</style>
+</helmet>
+<div style="position:relative; width:100%; min-height:100vh; overflow:hidden; background:radial-gradient(140% 100% at 50% -10%, #1c0e2e 0%, #100820 34%, #08040f 70%, #050308 100%); font-family:'EB Garamond', Georgia, serif; color:#e8dcc4;">
+
+  <div style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(72% 58% at 50% 44%, rgba(0,0,0,0) 34%, rgba(2,1,6,.86) 100%); z-index:2;"></div>
+
+  <!-- ================= TITLE ================= -->
+  <sc-if value="{{ isTitle }}" hint-placeholder-val="{{ true }}">
+  <div style="position:relative; z-index:5; max-width:940px; margin:0 auto; padding:44px 26px 58px; display:flex; flex-direction:column; align-items:center; text-align:center; animation:wsrise .7s ease both;">
+    <div style="font-family:'Cinzel',serif; letter-spacing:.42em; font-size:12px; color:#9a7bc4; text-transform:uppercase; padding-left:.42em;">Night Street Games presents</div>
+    <h1 style="font-family:'Cinzel',serif; font-weight:900; font-size:66px; line-height:.98; margin:14px 0 6px; background:linear-gradient(180deg,#f6e3ad,#d9a94e 60%,#8a5a1f); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 2px 30px rgba(217,169,78,.25);">WITHERSHINS</h1>
+    <div style="font-family:'Cinzel',serif; letter-spacing:.34em; font-size:15px; color:#c9b78e; padding-left:.34em;">DUEL OF THE TICKING CLOCK</div>
+    <p style="max-width:620px; font-size:18px; line-height:1.5; color:#cbb9a0; margin:22px 0 4px; text-wrap:pretty;">Drain the youthful years from your rival and be the younger witch at midnight. The hut is black as pitch — read her sealed hand only by candlelight and the lightning's flash. Seal your rituals, spend your lit Doom cards before they wane, and beat the clock to midnight.</p>
+
+    <div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin:24px 0 6px;">
+      <button onClick="{{ startGame }}" style="font-family:'Cinzel',serif; font-weight:700; letter-spacing:.14em; font-size:17px; color:#160a26; background:linear-gradient(180deg,#f4e0a6,#d9a94e); border:none; padding:16px 40px; border-radius:2px; cursor:pointer; box-shadow:0 8px 30px rgba(217,169,78,.32), inset 0 1px 0 rgba(255,255,255,.5); text-transform:uppercase;" style-hover="transform:translateY(-2px); box-shadow:0 12px 38px rgba(217,169,78,.5);">Begin the Duel</button>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:32px; width:100%; max-width:760px;">
+      <sc-for list="{{ elementTypes }}" as="c" hint-placeholder-count="3">
+        <div style="text-align:left; background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.01)); border:1px solid {{ c.line }}; border-radius:8px; padding:14px 14px;">
+          <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;">
+            <div style="width:28px; height:28px; color:{{ c.accent }};">{{ c.icon }}</div>
+            <div style="font-family:'Cinzel',serif; font-size:15px; color:{{ c.accent }}; letter-spacing:.05em;">{{ c.name }}</div>
+          </div>
+          <div style="font-size:12.5px; color:#b3a488; line-height:1.4;">{{ c.blurb }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; gap:22px; flex-wrap:wrap; justify-content:center; margin-top:24px; max-width:780px;">
+      <sc-for list="{{ bells }}" as="b" hint-placeholder-count="4">
+        <div style="display:flex; flex-direction:column; align-items:center; min-width:118px;">
+          <div style="font-family:'Cinzel',serif; font-size:24px; color:#e6c877;">{{ b.num }}</div>
+          <div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#a98fd0; margin:2px 0 3px;">{{ b.name }}</div>
+          <div style="font-size:12px; color:#9c8e76; line-height:1.32; text-align:center; max-width:150px;">{{ b.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= GAME ================= -->
+  <sc-if value="{{ inGame }}" hint-placeholder-val="{{ true }}">
+
+  <!-- environment: floorboards + macabre props (lit by lightning) -->
+  <div style="position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;">
+    <div style="position:absolute; inset:-8%; opacity:{{ floorOpacity }}; filter:{{ envFilter }}; transition:opacity .35s, filter .35s; background:repeating-linear-gradient(91deg,#160e22 0 52px,#100a1a 52px 55px), radial-gradient(120% 90% at 50% 45%, rgba(40,26,60,.4), transparent 70%);"></div>
+    <div style="position:absolute; inset:0; opacity:{{ propOpacity }}; filter:{{ envFilter }}; transition:opacity .35s, filter .35s;">
+      <sc-for list="{{ props }}" as="p" hint-placeholder-count="8">
+        <div style="position:absolute; left:{{ p.x }}; top:{{ p.y }}; width:{{ p.w }}px; height:{{ p.w }}px; transform:{{ p.tf }}; color:#3a3350;">{{ p.node }}</div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- lightning flash -->
+  <sc-if value="{{ lightning }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:24; pointer-events:none; mix-blend-mode:screen; background:radial-gradient(circle at 50% 32%, rgba(228,234,255,.92), rgba(176,196,255,.5) 58%, rgba(110,130,196,.16)); animation:wsflash 1.5s ease-out both;"></div>
+  </sc-if>
+  <!-- final countdown blood vignette -->
+  <sc-if value="{{ finalGear }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:3; pointer-events:none; background:radial-gradient(118% 88% at 50% 50%, transparent 44%, rgba(128,10,22,.4) 100%); animation:wspulse 2.2s ease-in-out infinite;"></div>
+  </sc-if>
+
+  <div style="position:relative; z-index:5; width:100%; max-width:1120px; margin:0 auto; padding:10px 22px 18px; display:flex; flex-direction:column; align-items:center;">
+
+    <div style="display:flex; flex-direction:row; align-items:center; gap:15px; z-index:8; background:rgba(10,6,20,.5); border:1px solid rgba(230,200,119,.14); border-radius:18px; padding:5px 16px; margin:0 auto 5px; width:fit-content;">
+      <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:.16em; color:#8f74bd; text-transform:uppercase;">Card Types</div>
+      <sc-for list="{{ legend }}" as="l" hint-placeholder-count="3">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <div style="width:11px; height:11px; border-radius:3px; background:{{ l.color }}; box-shadow:0 0 8px {{ l.line }};"></div>
+          <span style="font-size:11.5px; color:#cbb9a0; font-family:'Cinzel',serif; letter-spacing:.03em; white-space:nowrap;">{{ l.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="width:100%; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; margin-bottom:2px;">
+      <div style="justify-self:start; font-family:'Cinzel',serif; letter-spacing:.24em; font-size:13px; color:#8f74bd;">WITHERSHINS</div>
+      <div style="justify-self:center; display:flex; align-items:center; gap:10px;">
+        <div style="font-family:'Cinzel',serif; font-size:12.5px; letter-spacing:.18em; color:#c9b78e; text-transform:uppercase;">{{ phaseLabel }}</div>
+        <sc-if value="{{ finalGear }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:'Cinzel',serif; font-size:10px; letter-spacing:.18em; color:#ff6a6a; border:1px solid rgba(255,106,106,.5); border-radius:20px; padding:3px 10px; text-transform:uppercase; animation:wspulse 1.4s ease-in-out infinite;">Final Countdown</div>
+        </sc-if>
+      </div>
+      <div style="justify-self:end; display:flex; align-items:center; gap:8px;">
+        <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ togglePause }}" title="Pause the ritual" style="font-family:'EB Garamond',serif; font-size:12.5px; color:#9c8e76; background:transparent; border:1px solid rgba(230,200,119,.2); border-radius:3px; padding:5px 10px; cursor:pointer;" style-hover="color:#e6c877;">{{ pauseLabel }}</button>
+        </sc-if>
+        <sc-if value="{{ inGame }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ toTitle }}" title="Abandon this duel and return to the title screen" style="font-family:'EB Garamond',serif; font-size:12.5px; color:#9c8e76; background:transparent; border:1px solid rgba(230,200,119,.2); border-radius:3px; padding:5px 10px; cursor:pointer;" style-hover="color:#ff8a94; border-color:rgba(255,138,148,.4);">Leave Duel</button>
+        </sc-if>
+        <button onClick="{{ toggleMute }}" style="font-family:'EB Garamond',serif; font-size:12.5px; color:#9c8e76; background:transparent; border:1px solid rgba(230,200,119,.2); border-radius:3px; padding:5px 10px; cursor:pointer;" style-hover="color:#e6c877;">{{ muteLabel }}</button>
+      </div>
+    </div>
+
+    <sc-if value="{{ paused }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed; inset:0; z-index:40; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; background:radial-gradient(60% 60% at 50% 45%, rgba(10,5,20,.82), rgba(4,2,9,.96)); backdrop-filter:blur(2px);">
+        <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#9a7bc4; text-transform:uppercase;">The hands are still</div>
+        <div style="font-family:'Cinzel',serif; font-weight:900; font-size:46px; background:linear-gradient(180deg,#f6e3ad,#d9a94e 60%,#8a5a1f); -webkit-background-clip:text; background-clip:text; color:transparent;">Paused</div>
+        <div style="display:flex; gap:12px;">
+          <button onClick="{{ togglePause }}" style="font-family:'Cinzel',serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#160a26; background:linear-gradient(180deg,#f4e0a6,#d9a94e); border:none; padding:13px 34px; border-radius:2px; cursor:pointer; box-shadow:0 8px 30px rgba(217,169,78,.32); text-transform:uppercase;" style-hover="transform:translateY(-2px);">Resume</button>
+          <button onClick="{{ toTitle }}" style="font-family:'Cinzel',serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#c9b78e; background:transparent; border:1px solid rgba(230,200,119,.3); padding:12px 26px; border-radius:2px; cursor:pointer; text-transform:uppercase;" style-hover="color:#f4e0a6; border-color:rgba(230,200,119,.6);">Title Screen</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <div style="width:100%; display:flex; align-items:flex-start; justify-content:center; gap:12px;">
+
+    <!-- LEFT: player hud + plan controls -->
+    <div style="flex:0 0 auto; width:180px; display:flex; flex-direction:column; align-items:center; gap:9px;">
+    <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:5px;">
+      <div style="position:relative;">
+        <div style="width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:{{ player.accent }}; background:radial-gradient(circle at 40% 30%, {{ player.wash }}, #0a1f1e); border:1.5px solid {{ player.line }};">{{ plySil }}</div>
+        {{ player.floatNode }}
+      </div>
+      <div style="font-family:'Cinzel',serif; font-size:12.5px; color:#f0dfc0; letter-spacing:.05em; text-align:center; white-space:nowrap;">{{ player.name }} <span style="color:#7fb8ad; font-size:10px;">(you)</span></div>
+      <div title="Your age — reach 100 (aged to dust) or 0 (youthed to nothing) and you lose; be younger at midnight to win." style="position:relative; width:100%; height:12px; border-radius:6px; background:rgba(0,0,0,.55); border:1px solid {{ player.line }}; overflow:hidden; cursor:help;">
+        <div style="position:absolute; left:0; top:0; bottom:0; width:{{ player.lifePct }}%; background:linear-gradient(90deg,{{ player.accent }},#ff5d6c); transition:width .55s cubic-bezier(.4,0,.2,1); box-shadow:0 0 10px {{ player.line }};"></div>
+        <div style="position:absolute; left:0; top:0; bottom:0; width:2px; background:#ff5d6c; box-shadow:0 0 6px rgba(255,93,108,.9);"></div>
+        <div style="position:absolute; right:0; top:0; bottom:0; width:2px; background:#ff5d6c; box-shadow:0 0 6px rgba(255,93,108,.9);"></div>
+      </div>
+      <div style="font-size:12px; color:#9c8e76;">Age: <b style="color:{{ player.accent }}; font-family:'Cinzel',serif; font-size:16px;">{{ player.age }}</b></div>
+      <sc-if value="{{ player.hasChips }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+          <sc-for list="{{ player.chips }}" as="ch" hint-placeholder-count="1">
+            <div style="font-size:9.5px; padding:1px 6px; border-radius:8px; background:{{ ch.bg }}; color:{{ ch.color }}; border:1px solid {{ ch.line }}; font-family:'Cinzel',serif;">{{ ch.label }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- plan controls under player -->
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+      <div style="width:100%; display:flex; flex-direction:column; align-items:stretch; gap:8px; animation:wsrise .4s ease both;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <div style="font-family:'Cinzel',serif; font-size:12.5px; letter-spacing:.06em; color:#e6c877;">{{ quarterTitle }}</div>
+          <div style="display:flex; align-items:center; gap:6px; padding:3px 10px; border-radius:14px; background:rgba(0,0,0,.35); border:1px solid {{ timerColor }};">
+            <div style="width:13px; height:13px; color:{{ timerColor }};">{{ hourglass }}</div>
+            <sc-if value="{{ timerLow }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Cinzel',serif; font-size:14px; color:#ff6a6a; animation:wstime .7s ease-in-out infinite;">{{ timeText }}</span></sc-if>
+            <sc-if value="{{ timerCalm }}" hint-placeholder-val="{{ true }}"><span style="font-family:'Cinzel',serif; font-size:14px; color:#e6c877;">{{ timeText }}</span></sc-if>
+          </div>
+        </div>
+        <sc-for list="{{ slots3 }}" as="sl" hint-placeholder-count="3">
+          <button onClick="{{ sl.onClick }}" draggable="{{ sl.drag }}" onDragStart="{{ sl.onDragStart }}" onDragOver="{{ allowDrop }}" onDrop="{{ sl.onDrop }}" onDragEnd="{{ sl.onDragEnd }}" style="position:relative; width:100%; height:56px; border-radius:9px; cursor:pointer; background:rgba(10,6,20,.4); border:1.5px dashed rgba(230,200,119,.3); display:flex; align-items:center; justify-content:center; gap:8px; font-family:'EB Garamond',serif; transition:border-color .12s, box-shadow .12s;" style-hover="border-color:#e6c877; box-shadow:0 0 16px rgba(230,200,119,.25);">
+            <div style="position:absolute; top:5px; left:9px; font-family:'Cinzel',serif; font-size:11px; color:#e6c877;">{{ sl.roman }}</div>
+            <sc-if value="{{ sl.filled }}" hint-placeholder-val="{{ false }}">
+              <div style="width:24px; height:24px; color:{{ sl.meta.accent }};">{{ sl.icon }}</div>
+              <div style="font-family:'Cinzel',serif; font-size:12.5px; color:#f4ecd8;">{{ sl.name }}</div>
+            </sc-if>
+            <sc-if value="{{ sl.empty }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:11px; color:#6a5c78; font-style:italic;">tap to seal</div>
+            </sc-if>
+            <sc-if value="{{ sl.veiled }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; inset:0; border-radius:9px; background:linear-gradient(160deg,#1a1030,#0c0818); display:flex; align-items:center; justify-content:center; gap:8px; opacity:{{ sl.veilOpacity }}; transition:opacity .5s ease; pointer-events:none;">
+                <div style="width:22px; height:22px; color:#c6a8f0;">{{ sl.veilIcon }}</div>
+                <div style="font-family:'Cinzel',serif; font-size:14px; letter-spacing:.22em; color:#c6a8f0; padding-left:.22em;">? ? ?</div>
+              </div>
+            </sc-if>
+          </button>
+        </sc-for>
+        <button onClick="{{ cast }}" style="font-family:'Cinzel',serif; font-weight:700; letter-spacing:.12em; font-size:14px; color:{{ castColor }}; background:{{ castBg }}; border:none; padding:11px 14px; border-radius:3px; cursor:{{ castCursor }}; box-shadow:{{ castShadow }}; text-transform:uppercase; transition:background .2s, color .2s;">Cast the Quarter</button>
+      </div>
+    </sc-if>
+    </div>
+
+    <!-- stage -->
+    <div style="position:relative; flex:0 1 880px; min-width:0; height:366px; display:flex; align-items:center; justify-content:center; perspective:1300px; margin:0;">
+      <div style="position:relative; width:560px; height:366px;">
+      <div style="position:absolute; left:50%; top:50%; width:760px; height:760px; transform:translate(-50%,-50%) rotateX(20deg) scale(.56); transform-style:preserve-3d;">
+        <div style="position:absolute; inset:60px; border-radius:50%; background:radial-gradient(circle at 50% 42%, #1e1330 0%, #140b22 46%, #0a0517 78%, #060310 100%); box-shadow:inset 0 0 90px rgba(0,0,0,.9), 0 30px 80px rgba(0,0,0,.7);"></div>
+        <div style="position:absolute; inset:74px; border-radius:50%; border:1.5px solid rgba(230,200,119,.14);"></div>
+        <div style="position:absolute; inset:120px; border-radius:50%; border:1px dashed rgba(176,107,255,.2);"></div>
+        <div style="position:absolute; inset:210px; border-radius:50%; border:1px solid rgba(230,200,119,.09); background:radial-gradient(circle,rgba(176,107,255,.06),transparent 70%);"></div>
+
+        <!-- darkness scrim over the table (lifts during lightning) -->
+        <div style="position:absolute; inset:60px; border-radius:50%; background:radial-gradient(circle at 50% 42%, rgba(4,2,9,.72) 0%, rgba(2,1,5,.96) 100%); opacity:{{ scrimOpacity }}; transition:opacity .4s; pointer-events:none;"></div>
+
+        <div style="position:absolute; left:380px; top:380px; width:6px; height:{{ handLen }}px; transform-origin:50% 100%; transform:translate(-50%,-100%) rotate({{ handDeg }}deg); transition:transform .6s cubic-bezier(.5,0,.2,1); background:linear-gradient(180deg,#e6c877,#8a5a1f); border-radius:3px; box-shadow:0 0 16px rgba(230,200,119,.5); z-index:6;"></div>
+        <sc-if value="{{ showSecond }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; left:380px; top:380px; width:3px; height:200px; transform-origin:50% 100%; transform:translate(-50%,-100%) rotate({{ secHandDeg }}deg); background:linear-gradient(180deg,#f6ecd0,#9a8fb0); border-radius:2px; box-shadow:0 0 8px rgba(246,236,208,.5); z-index:6;"></div>
+        </sc-if>
+        <div style="position:absolute; left:380px; top:380px; width:22px; height:22px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle,#f4e0a6,#8a5a1f); box-shadow:0 0 20px rgba(230,200,119,.6); z-index:7;"></div>
+
+        <sc-for list="{{ slots }}" as="s" hint-placeholder-count="12">
+          <div style="position:absolute; inset:0;">
+            <sc-if value="{{ s.lit }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute; left:{{ s.opp.x }}px; top:{{ s.opp.y }}px; width:170px; height:250px; transform:translate(-50%,-38%); border-radius:50%; background:radial-gradient(circle,rgba(255,178,90,.15),transparent 64%); pointer-events:none;"></div>
+            </sc-if>
+            <div style="position:absolute; left:{{ s.num.x }}px; top:{{ s.num.y }}px; transform:translate(-50%,-50%); font-family:'Cinzel',serif; font-size:22px; color:{{ s.numColor }}; text-shadow:0 0 10px rgba(0,0,0,.7); opacity:{{ s.numOpacity }};">{{ s.roman }}</div>
+            <sc-if value="{{ s.oppDark }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute; left:{{ s.opp.x }}px; top:{{ s.opp.y }}px; transform:translate(-50%,-50%); width:44px; height:60px; border-radius:5px; background:linear-gradient(150deg,#120a1c,#070410); border:1px solid rgba(90,70,120,.2); box-shadow:0 4px 10px rgba(0,0,0,.65); opacity:.5;"></div>
+            </sc-if>
+            <sc-if value="{{ s.oppReveal }}" hint-placeholder-val="{{ false }}">
+              <div title="{{ s.oppMeta.elemLabel }}" style="position:absolute; left:{{ s.opp.x }}px; top:{{ s.opp.y }}px; transform:translate(-50%,-50%); width:44px; height:60px; border-radius:5px; background:{{ s.oppMeta.card }}; border:1.5px solid {{ s.oppMeta.accent }}; box-shadow:{{ s.oppShadow }}; display:flex; align-items:center; justify-content:center; color:{{ s.oppMeta.accent }}; opacity:{{ s.oppRevealOpacity }}; transition:opacity .8s ease;"><div style="width:22px;height:22px;">{{ s.oppIcon }}</div></div>
+            </sc-if>
+            <sc-if value="{{ s.oppGhost }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; left:{{ s.opp.x }}px; top:{{ s.opp.y }}px; transform:translate(-50%,-50%); width:44px; height:60px; border-radius:5px; background:linear-gradient(150deg,#120a1c,#070410); border:1px solid rgba(90,70,120,.2); box-shadow:0 4px 10px rgba(0,0,0,.65); display:flex; align-items:center; justify-content:center; color:rgba(120,100,150,.26); opacity:.5;"><div style="width:20px;height:20px;">{{ s.oppGhostIcon }}</div></div>
+            </sc-if>
+            <sc-if value="{{ s.plyPlaced }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute; left:{{ s.plyStack.x }}px; top:{{ s.plyStack.y }}px; transform:translate(-50%,-50%); width:44px; height:60px; border-radius:5px; background:{{ s.plyCardBg }}; border:1.5px solid {{ s.plyCardBorder }}; box-shadow:-3px 5px 12px rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; color:{{ s.plyIconColor }}; z-index:3;"><div style="width:23px;height:23px;">{{ s.plyIcon }}</div></div>
+            </sc-if>
+            <div style="position:absolute; left:{{ s.candle.x }}px; top:{{ s.candle.y }}px; transform:translate(-50%,-92%) rotateX(-20deg); display:flex; flex-direction:column; align-items:center;">
+              <sc-if value="{{ s.lit }}" hint-placeholder-val="{{ true }}">
+                <div style="position:relative; width:12px; height:20px;">
+                  <div style="position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:34px; height:34px; margin-bottom:-6px; border-radius:50%; background:radial-gradient(circle,{{ s.flameGlow }},transparent 68%); animation:wsglow 1.7s ease-in-out infinite;"></div>
+                  <div style="position:relative; width:12px; height:20px; margin:0 auto; border-radius:50% 50% 48% 48% / 62% 62% 40% 40%; background:radial-gradient(circle at 50% 68%,#fff6d8,#ffcf6b 42%,#ff7a1e 78%,transparent 100%); animation:wsflick .42s ease-in-out infinite;"></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ s.snuffed }}" hint-placeholder-val="{{ false }}">
+                <div style="width:2px; height:16px; background:linear-gradient(180deg,rgba(160,160,180,.35),transparent); opacity:.6;"></div>
+              </sc-if>
+              <div style="width:6px; height:22px; border-radius:2px; background:linear-gradient(180deg,#efe6cf,#b9a97f); box-shadow:0 2px 4px rgba(0,0,0,.5);"></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      </div>
+
+      <sc-if value="{{ showBanner }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; top:6%; left:50%; transform:translateX(-50%); z-index:14; pointer-events:none;">
+        <div style="text-align:center; animation:wsbanner 2.6s ease both;">
+          <div style="font-family:'Cinzel',serif; font-weight:900; font-size:32px; letter-spacing:.08em; background:linear-gradient(180deg,#f6e3ad,#d9a94e); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 0 30px rgba(217,169,78,.4);">{{ banner.title }}</div>
+          <div style="font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:#c9b78e; margin-top:2px;">{{ banner.sub }}</div>
+        </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- opponent hud (right) -->
+    <div style="flex:0 0 auto; width:180px; display:flex; flex-direction:column; align-items:center; gap:5px;">
+      <div style="position:relative;">
+        <div style="width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:{{ opp.accent }}; background:radial-gradient(circle at 40% 30%, {{ opp.wash }}, #150a1f); border:1.5px solid {{ opp.line }};">{{ oppSil }}</div>
+        {{ opp.floatNode }}
+      </div>
+      <div style="font-family:'Cinzel',serif; font-size:12.5px; color:#f0dfc0; letter-spacing:.05em; text-align:center; white-space:nowrap;">{{ opp.name }}</div>
+      <div title="Her age — reach 100 (aged to dust) or 0 (youthed to nothing) and she loses; be younger at midnight to win." style="position:relative; width:100%; height:12px; border-radius:6px; background:rgba(0,0,0,.55); border:1px solid {{ opp.line }}; overflow:hidden; cursor:help;">
+        <div style="position:absolute; left:0; top:0; bottom:0; width:{{ opp.lifePct }}%; background:linear-gradient(90deg,{{ opp.accent }},#ff5d6c); transition:width .55s cubic-bezier(.4,0,.2,1); box-shadow:0 0 10px {{ opp.line }};"></div>
+        <div style="position:absolute; left:0; top:0; bottom:0; width:2px; background:#ff5d6c; box-shadow:0 0 6px rgba(255,93,108,.9);"></div>
+        <div style="position:absolute; right:0; top:0; bottom:0; width:2px; background:#ff5d6c; box-shadow:0 0 6px rgba(255,93,108,.9);"></div>
+      </div>
+      <div style="font-size:12px; color:#9c8e76;">Age: <b style="color:{{ opp.accent }}; font-family:'Cinzel',serif; font-size:16px;">{{ opp.age }}</b></div>
+      <sc-if value="{{ opp.hasChips }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+          <sc-for list="{{ opp.chips }}" as="ch" hint-placeholder-count="1">
+            <div style="font-size:9.5px; padding:1px 6px; border-radius:8px; background:{{ ch.bg }}; color:{{ ch.color }}; border:1px solid {{ ch.line }}; font-family:'Cinzel',serif;">{{ ch.label }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    </div>
+
+    <!-- HAND rail -->
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+      <div style="width:100%; margin-top:12px; animation:wsrise .4s ease both;">
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+          <sc-for list="{{ handCards }}" as="hc" hint-placeholder-count="9">
+            <button onClick="{{ hc.onClick }}" draggable="true" onDragStart="{{ hc.onDragStart }}" onDragOver="{{ allowDrop }}" onDrop="{{ hc.onDrop }}" onDragEnd="{{ hc.onDragEnd }}" style="position:relative; width:148px; text-align:left; cursor:pointer; border-radius:9px; padding:7px 10px; background:{{ hc.card }}; border:1.5px solid {{ hc.borderCol }}; box-shadow:{{ hc.glow }}; transform:{{ hc.lift }}; font-family:'EB Garamond',serif; color:#eadfc6; transition:transform .12s, box-shadow .12s, border-color .12s;" style-hover="transform:translateY(-5px);">
+              <sc-if value="{{ hc.showBadge }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; top:-8px; right:-5px; font-family:'Cinzel',serif; font-size:8.5px; letter-spacing:.08em; color:#0a0512; background:{{ hc.badgeBg }}; padding:2px 7px; border-radius:9px; box-shadow:0 3px 7px rgba(0,0,0,.4);">{{ hc.badgeText }}</div>
+              </sc-if>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="width:24px; height:24px; color:{{ hc.accent }};">{{ hc.icon }}</div>
+                <div style="font-family:'Cinzel',serif; font-size:8.5px; letter-spacing:.12em; text-transform:uppercase; color:{{ hc.elemColor }};">{{ hc.elemLabel }}</div>
+              </div>
+              <div style="font-family:'Cinzel',serif; font-size:14px; color:#f4ecd8; margin:5px 0 2px;">{{ hc.name }}</div>
+              <div style="font-size:11px; line-height:1.28; color:#b3a488;">{{ hc.short }}</div>
+              <sc-if value="{{ hc.veiled }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; inset:0; border-radius:9px; background:linear-gradient(160deg,#1a1030,#0c0818); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; opacity:{{ hc.veilOpacity }}; transition:opacity .5s ease; pointer-events:none;">
+                  <div style="width:24px; height:24px; color:#c6a8f0;">{{ hc.veilIcon }}</div>
+                  <div style="font-family:'Cinzel',serif; font-size:16px; letter-spacing:.24em; color:#c6a8f0; padding-left:.24em;">? ? ?</div>
+                  <div style="font-family:'Cinzel',serif; font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; color:#8f74bd;">Veiled</div>
+                </div>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showReveal }}" hint-placeholder-val="{{ false }}">
+      <div style="width:100%; display:flex; justify-content:center; margin-top:6px;">
+        <div style="display:flex; flex-direction:column; align-items:center; animation:wsreveal .32s ease both;">
+          <div style="display:flex; align-items:flex-start; gap:20px;">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <div style="width:82px; height:110px; border-radius:8px; background:{{ reveal.plyMeta.card }}; border:2px solid {{ reveal.plyMeta.accent }}; box-shadow:0 12px 34px rgba(0,0,0,.6), 0 0 24px {{ reveal.plyMeta.line }}; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:11px 8px;">
+                <div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:.04em; color:{{ reveal.plyMeta.accent }}; text-align:center; line-height:1.05;">{{ reveal.plyMeta.name }}</div>
+                <div style="width:36px; height:36px; color:{{ reveal.plyMeta.accent }};">{{ reveal.plyIcon }}</div>
+                <div style="font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:{{ reveal.plyMeta.elemColor }};">{{ reveal.plyMeta.elemLabel }}</div>
+              </div>
+              <div style="font-family:'Cinzel',serif; font-size:14px; margin-top:6px; color:{{ reveal.plyDeltaColor }};">{{ reveal.plyDeltaText }}</div>
+              <div style="font-size:11px; color:#7fb8ad; font-family:'Cinzel',serif; letter-spacing:.1em;">YOU</div>
+            </div>
+            <div style="position:relative; display:flex; flex-direction:column; align-items:center; width:70px; padding-top:34px;">
+              <sc-if value="{{ reveal.collision }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; top:56px; left:50%; z-index:5;">
+                  <sc-for list="{{ reveal.sparks }}" as="sp" hint-placeholder-count="8">
+                    <div style="position:absolute; left:0; top:0; transform:{{ sp.rot }};">
+                      <div style="position:absolute; left:-1.5px; top:-6px; width:3px; height:16px; border-radius:2px; background:linear-gradient(180deg,#fff6d8,#ffb347); box-shadow:0 0 7px #ffcf6b; animation:wsspark .62s ease-out both;"></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="font-family:'Cinzel',serif; font-size:12px; color:#e6c877; letter-spacing:.1em; z-index:2;">HOUR</div>
+              <div style="font-family:'Cinzel',serif; font-size:28px; color:#fff2cf; z-index:2;">{{ reveal.roman }}</div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <div style="width:82px; height:110px; border-radius:8px; background:{{ reveal.oppMeta.card }}; border:2px solid {{ reveal.oppMeta.accent }}; box-shadow:0 12px 34px rgba(0,0,0,.6), 0 0 24px {{ reveal.oppMeta.line }}; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:11px 8px;">
+                <div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:.04em; color:{{ reveal.oppMeta.accent }}; text-align:center; line-height:1.05;">{{ reveal.oppMeta.name }}</div>
+                <div style="width:36px; height:36px; color:{{ reveal.oppMeta.accent }};">{{ reveal.oppIcon }}</div>
+                <div style="font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:{{ reveal.oppMeta.elemColor }};">{{ reveal.oppMeta.elemLabel }}</div>
+              </div>
+              <div style="font-family:'Cinzel',serif; font-size:14px; margin-top:6px; color:{{ reveal.oppDeltaColor }};">{{ reveal.oppDeltaText }}</div>
+              <div style="font-size:11px; color:#d98a94; font-family:'Cinzel',serif; letter-spacing:.1em;">{{ opp.name }}</div>
+            </div>
+          </div>
+          <sc-if value="{{ reveal.showEsc }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:4px; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#ff8a8a;">{{ reveal.escText }}</div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ playing }}" hint-placeholder-val="{{ false }}">
+      <div style="width:100%; display:flex; align-items:center; justify-content:center; gap:16px; margin-top:22px;">
+        <button onClick="{{ toggleFast }}" style="font-family:'Cinzel',serif; font-size:12px; letter-spacing:.1em; color:#e6c877; background:transparent; border:1px solid rgba(230,200,119,.3); border-radius:3px; padding:6px 14px; cursor:pointer;" style-hover="background:rgba(230,200,119,.1);">{{ speedLabel }}</button>
+      </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ================= GAME OVER ================= -->
+  <sc-if value="{{ isOver }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; background:radial-gradient(60% 60% at 50% 45%, rgba(10,5,20,.72), rgba(4,2,9,.94)); animation:wsrise .5s ease both;">
+    <sc-if value="{{ showSkull }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute; top:44%; left:50%; z-index:0; opacity:.16; color:#ff5d6c; filter:drop-shadow(0 0 44px rgba(255,60,80,.55)); animation:wslaugh 1.5s ease-in-out infinite; pointer-events:none;">{{ skullNode }}</div>
+    </sc-if>
+    <div style="position:relative; z-index:2; text-align:center; max-width:520px; padding:34px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#9a7bc4; text-transform:uppercase;">Midnight has struck</div>
+      <h2 style="font-family:'Cinzel',serif; font-weight:900; font-size:52px; line-height:1; margin:12px 0 8px; background:linear-gradient(180deg,#f6e3ad,#d9a94e 60%,#8a5a1f); -webkit-background-clip:text; background-clip:text; color:transparent;">{{ result.title }}</h2>
+      <p style="font-size:18px; color:#cbb9a0; font-style:italic; line-height:1.5; margin:4px 0 20px; text-wrap:pretty;">{{ result.sub }}</p>
+      <div style="display:flex; gap:30px; justify-content:center; margin:8px 0 26px;">
+        <div><div style="font-family:'Cinzel',serif; font-size:12px; color:#7fb8ad; letter-spacing:.1em;">YOU</div><div style="font-family:'Cinzel',serif; font-size:34px; color:#fff2cf;">{{ player.age }}</div><div style="font-size:12px; color:#9c8e76;">years old</div></div>
+        <div style="width:1px; background:rgba(230,200,119,.2);"></div>
+        <div><div style="font-family:'Cinzel',serif; font-size:12px; color:#d98a94; letter-spacing:.1em;">{{ opp.name }}</div><div style="font-family:'Cinzel',serif; font-size:34px; color:#fff2cf;">{{ opp.age }}</div><div style="font-size:12px; color:#9c8e76;">years old</div></div>
+      </div>
+      <div style="margin:0 auto 24px; max-width:440px; text-align:left;">
+        <div style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:11px; color:#9a7bc4; text-transform:uppercase; text-align:center; margin-bottom:10px;">The Grimoire · How Midnight Was Met</div>
+        <div style="max-height:190px; overflow-y:auto; overflow-x:hidden; border-top:1px solid rgba(230,200,119,.16); border-bottom:1px solid rgba(230,200,119,.16); padding:2px 0;">
+          <div style="display:grid; grid-template-columns:34px 1fr 46px 46px 1fr; gap:8px; align-items:center; padding:8px 4px; font-family:'Cinzel',serif; font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#6a5c78; position:sticky; top:0; background:#0d0718; box-shadow:0 1px 0 rgba(230,200,119,.12);">
+            <div>Hr</div><div style="color:#7fb8ad;">You</div><div style="text-align:center;">You</div><div style="text-align:center;">Vex</div><div style="text-align:right; color:#d98a94;">Mother Vex</div>
+          </div>
+          <sc-for list="{{ logRows }}" as="row" hint-placeholder-count="0">
+            <div style="border-top:1px solid rgba(255,255,255,.04);">
+              <div style="display:grid; grid-template-columns:34px 1fr 46px 46px 1fr; gap:8px; align-items:center; padding:7px 4px;">
+                <div style="font-family:'Cinzel',serif; font-size:14px; color:#c9b48a;">{{ row.roman }}</div>
+                <button onClick="{{ row.plyToggle }}" style="display:flex; align-items:center; gap:6px; min-width:0; cursor:pointer; background:transparent; border:none; padding:0; text-align:left;"><span style="width:15px; height:15px; color:#7fb8ad; flex-shrink:0;">{{ row.plyIcon }}</span><span style="font-size:12px; color:#d8c8ac; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-bottom:1px dotted rgba(216,200,172,.35);">{{ row.ply }}</span></button>
+                <div style="text-align:center;"><div style="font-family:'Cinzel',serif; font-size:13px; color:{{ row.plyAgeCol }};">{{ row.plyAgeText }}</div><div style="font-size:9px; color:#7fb8ad; opacity:.7;">{{ row.plyAge }}</div></div>
+                <div style="text-align:center;"><div style="font-family:'Cinzel',serif; font-size:13px; color:{{ row.oppAgeCol }};">{{ row.oppAgeText }}</div><div style="font-size:9px; color:#d98a94; opacity:.7;">{{ row.oppAge }}</div></div>
+                <button onClick="{{ row.oppToggle }}" style="display:flex; align-items:center; justify-content:flex-end; gap:6px; min-width:0; cursor:pointer; background:transparent; border:none; padding:0; text-align:right;"><span style="font-size:12px; color:#d8c8ac; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-bottom:1px dotted rgba(216,200,172,.35);">{{ row.opp }}</span><span style="width:15px; height:15px; color:#d98a94; flex-shrink:0;">{{ row.oppIcon }}</span></button>
+              </div>
+              <sc-if value="{{ row.plyOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 4px 8px; padding:8px 10px; border-left:2px solid #7fb8ad; background:rgba(127,184,173,.08); border-radius:0 4px 4px 0;"><div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:.08em; color:#7fb8ad; text-transform:uppercase;">{{ row.ply }}</div><div style="font-size:12px; color:#c7b8a0; line-height:1.4; margin-top:3px;">{{ row.plyDesc }}</div></div>
+              </sc-if>
+              <sc-if value="{{ row.oppOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:0 4px 8px; padding:8px 10px; border-right:2px solid #d98a94; background:rgba(217,138,148,.08); border-radius:4px 0 0 4px; text-align:right;"><div style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:.08em; color:#d98a94; text-transform:uppercase;">{{ row.opp }}</div><div style="font-size:12px; color:#c7b8a0; line-height:1.4; margin-top:3px;">{{ row.oppDesc }}</div></div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; align-items:stretch;">
+        <button onClick="{{ startGame }}" style="font-family:'Cinzel',serif; font-weight:700; letter-spacing:.14em; font-size:14px; color:#160a26; background:linear-gradient(180deg,#f4e0a6,#d9a94e); border:none; padding:13px 26px; border-radius:2px; cursor:pointer; box-shadow:0 8px 30px rgba(217,169,78,.32); text-transform:uppercase;" style-hover="transform:translateY(-2px);">Duel Again</button>
+        <button onClick="{{ toTitle }}" style="font-family:'Cinzel',serif; font-weight:700; letter-spacing:.14em; font-size:14px; color:#c9b78e; background:transparent; border:1px solid rgba(230,200,119,.3); padding:13px 26px; border-radius:2px; cursor:pointer; text-transform:uppercase;" style-hover="color:#f4e0a6; border-color:rgba(230,200,119,.6);">Title Screen</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    phase:'title', quarter:0,
+    player:null, opp:null,
+    hand:[], placed:{}, dragUid:null, dragSlot:null, fusedThisQuarter:false, timeBank:0, timerRunning:false,
+    hour:12, resolved:{}, turnPassed:false,
+    playing:false, clash:null, banner:null,
+    fast:false, muted:false, result:null, lightning:false, matchLog:[], paused:false, logOpen:{},
+  };
+
+  QUARTERS = [[12,11,10],[9,8,7],[6,5,4],[3,2,1]];
+
+  // All tunable values in one place
+  V = { drainS:6, drainM:10, drainL:16, rejS:6, rejM:10, rejL:16,
+        curseTick:2, curseTurns:3, weakenTurns:3, familiarTurns:1,
+        familiar:4, prog:2, salemPer:4, covenPer:2, devil:20, moonlove:10, witchBoth:10, start:100,
+        steamD:10, steamR:6, magmaD:12, boltD:20, iceR:10, mistR:14,
+        quarterTime:30, escStep:0.05 };
+
+  // elem: fire | water | earth | air
+  CARDS = {
+    drain6:      { name:'Drain 6',        moon:'new',     ic:'drop',   desc:'Add 6 years to her age.' },
+    drain10:     { name:'Drain 10',       moon:'new',     ic:'drop',   desc:'Add 10 years to her age.' },
+    drain16:     { name:'Drain 16',       moon:'new',     ic:'drop',   desc:'Add 16 years to her age.' },
+    curse:       { name:'Curse',          moon:'new',     ic:'spiral', desc:'She ages 2 years each hour for 3 hours.' },
+    weaken:      { name:'Weaken',         moon:'new',     ic:'down',   desc:'Halve the years she can add for 3 hours.' },
+    familiar:    { name:'Familiar',       moon:'new',     ic:'eye',    desc:'Age her 4; she adds only half next hour.' },
+    progressive: { name:'Progressive Magic', moon:'new',  ic:'stack',  desc:'Age her 2, +2 for each card you played before.' },
+    salem:       { name:'Salem Condemnation', moon:'new', ic:'flame',  desc:'Age her 4 per Offense card she has shown.' },
+    rej6:        { name:'Rejuvenate 6',   moon:'full',    ic:'crescent', desc:'Shed up to 6 of your years.' },
+    rej10:       { name:'Rejuvenate 10',  moon:'full',    ic:'crescent', desc:'Shed up to 10 of your years.' },
+    rej16:       { name:'Rejuvenate 16',  moon:'full',    ic:'crescent', desc:'Shed up to 16 of your years.' },
+    salt:        { name:'Salt Circle',    moon:'full',    ic:'shield', desc:'Absorb her next Offense card whole.' },
+    mirror:      { name:'Mirror',         moon:'full',    ic:'mirror', desc:"Reverse her working back onto her." },
+    channel:     { name:'Channel',        moon:'full',    ic:'bolt',   desc:'Your next card counts double.' },
+    coven:       { name:"Coven's Aid",    moon:'full',    ic:'crescent', desc:'Shed 2 years per Defense card she has shown.' },
+    consume:     { name:'Consume Curse',  moon:'full',    ic:'shield', desc:'Break a curse on you and shed its years.' },
+    witching:    { name:'Witching Hour',  moon:'neutral', ic:'star',   desc:"Recast her third-hour card as your own." },
+    devil:       { name:"Devil's Bargain",moon:'neutral', ic:'skull',  desc:'Age her 20 — unless your next card is Defense, then you gain 40 years.' },
+    moonslove:   { name:"Moon's Love",    moon:'neutral', ic:'crescent', desc:'Shed 10 years, or 20 if your next card is Defense.' },
+    doomstrike:  { name:'Doomfire',       moon:'new',     ic:'skull',  doom:true, desc:'A lit hex — adds years to her age. Strongest with time on the clock.' },
+    doombless:   { name:'Grave Reprieve', moon:'full',    ic:'skull',  doom:true, desc:'A lit ward — sheds your years. Strongest with time on the clock.' },
+    boon:        { name:'Hidden Boon',    moon:'new',     ic:'star',   desc:'Add 22 to her age.' },
+    boonheal:    { name:'Hidden Grace',   moon:'full',    ic:'star',   desc:'Shed 18 of your years.' },
+    backfire:    { name:'Cruel Trick',    moon:'new',     ic:'skull',  desc:'It turns on you — add 16 to YOUR age.' },
+    gift:        { name:"Fool's Gift",    moon:'neutral', ic:'crescent', desc:'It slips loose — she sheds 12 years.' },
+  };
+
+  POOL = ['drain6','drain6','drain10','drain10','drain16','rej6','rej6','rej10','rej10','rej16','curse','curse','weaken','familiar','progressive','salem','salt','salt','mirror','channel','coven','consume','witching','devil','moonslove'];
+  MYST = ['boon','boonheal','backfire','gift'];
+
+  ROMAN = {12:'XII',11:'XI',10:'X',9:'IX',8:'VIII',7:'VII',6:'VI',5:'V',4:'IV',3:'III',2:'II',1:'I',0:'—'};
+
+  DOOMVAL = {3:26,2:17,1:9,0:3};
+
+  // mixed-element fusion table (sorted "a|b" key). Same-element pairs never fuse.
+  moonInfo(m){
+    if(m==='new')  return { label:'Offense',  color:'#ff7a9c', accent:'#ff6a7f', line:'rgba(255,106,127,.5)',  wash:'rgba(255,106,127,.14)', card:'linear-gradient(160deg,#37101e,#180a12)' };
+    if(m==='full') return { label:'Defense', color:'#7fe0d6', accent:'#5fe0d6', line:'rgba(95,224,214,.5)',   wash:'rgba(95,224,214,.14)',  card:'linear-gradient(160deg,#0f3230,#08201f)' };
+    return               { label:'Gambit',   color:'#cbb6e6', accent:'#c6b0e6', line:'rgba(198,176,230,.5)', wash:'rgba(198,176,230,.14)', card:'linear-gradient(160deg,#241a30,#140e1e)' };
+  }
+  meta(id){ const C=this.CARDS[id]; const m=this.moonInfo(C.moon); return { id, name:C.name, moon:C.moon, desc:C.desc, ic:C.ic, elemLabel:m.label, elemColor:m.color, accent:m.accent, line:m.line, wash:m.wash, card:m.card }; }
+  cardIcon(id,w){ return this.icon(this.CARDS[id].ic,w); }
+  doomMult(tb){ const idx=Math.floor((60-Math.min(60,tb||0))/5); return Math.max(0.5, 4 - 0.5*idx); }
+  doomVal(tb){ return Math.round(this.doomMult(tb)*7); }
+
+  ac=null;
+  audio(){ if(this.state.muted) return null; try{ if(!this.ac) this.ac=new (window.AudioContext||window.webkitAudioContext)(); if(this.ac.state==='suspended') this.ac.resume(); return this.ac; }catch(e){ return null; } }
+  tone(f,d,t,g,gl){ const ac=this.audio(); if(!ac) return; const o=ac.createOscillator(),n=ac.createGain(); o.type=t||'sine'; o.frequency.setValueAtTime(f,ac.currentTime); if(gl) o.frequency.exponentialRampToValueAtTime(Math.max(40,gl),ac.currentTime+d); n.gain.setValueAtTime(0,ac.currentTime); n.gain.linearRampToValueAtTime(g||0.14,ac.currentTime+0.01); n.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d); o.connect(n).connect(ac.destination); o.start(); o.stop(ac.currentTime+d+0.02); }
+  sTick(){ this.tone(150,0.12,'triangle',0.1,90); }
+  sBell(){ this.tone(320,1.4,'sine',0.16); this.tone(482,1.4,'sine',0.09); }
+  sHit(){ this.tone(200,0.35,'sawtooth',0.12,60); }
+  sHeal(){ this.tone(520,0.5,'sine',0.1,760); }
+  sWard(){ this.tone(700,0.28,'triangle',0.09,900); }
+  sCurse(){ this.tone(240,0.6,'sawtooth',0.13,120); }
+  sSnuff(){ this.tone(1200,0.18,'sine',0.05,300); }
+  sThunder(){ const ac=this.audio(); if(!ac) return; const dur=1.15; const buf=ac.createBuffer(1,Math.floor(ac.sampleRate*dur),ac.sampleRate); const d=buf.getChannelData(0); for(let i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2.2); } const src=ac.createBufferSource(); src.buffer=buf; const f=ac.createBiquadFilter(); f.type='lowpass'; f.frequency.setValueAtTime(520,ac.currentTime); f.frequency.exponentialRampToValueAtTime(70,ac.currentTime+dur); const g=ac.createGain(); g.gain.setValueAtTime(0.001,ac.currentTime); g.gain.linearRampToValueAtTime(0.34,ac.currentTime+0.03); g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+dur); src.connect(f).connect(g).connect(ac.destination); src.start(); this.tone(90,0.5,'sawtooth',0.08,50); }
+
+  componentDidMount(){ clearInterval(this.ticker); this.ticker=setInterval(()=>this.tick(),250); }
+  startTicker(){ clearInterval(this.ticker); this.ticker=setInterval(()=>this.tick(),250); }
+  stopTicker(){ clearInterval(this.ticker); this.ticker=null; }
+  componentWillUnmount(){ [this.t1,this.t2,this.t3,this.tStart,this.tb,this.lt,this.lf,this.tFlash].forEach(t=>clearTimeout(t)); clearInterval(this.ticker); }
+
+  flash(){ const s=this.state; if(s.phase!=='plan') return; this.setState({ lightning:true }); clearTimeout(this.lf); this.lf=setTimeout(()=>this.setState({ lightning:false }),1500); }
+
+  flashBanner(b){ clearTimeout(this.tb); this.setState({ banner:b }); this.tb=setTimeout(()=>this.setState({ banner:null }),2600); }
+  newSt(){ return { curse:0, drainDown:0, salt:false, channel:false, prog:0 }; }
+
+  uidc=0;
+  mk(id){ return { uid:++this.uidc, id }; }
+  drawN(n){ const out=[]; for(let i=0;i<n;i++){ const r=Math.random(); if(r<0.09){ out.push({ uid:++this.uidc, id:(Math.random()<0.5?'doomstrike':'doombless') }); } else if(r<0.18){ out.push({ uid:++this.uidc, id:this.MYST[Math.floor(Math.random()*this.MYST.length)], mystery:true }); } else { out.push({ uid:++this.uidc, id:this.POOL[Math.floor(Math.random()*this.POOL.length)] }); } } return out; }
+  fuse(){ return null; }
+
+  startGame = () => {
+    this.audio();
+    [this.t1,this.t2,this.t3,this.tStart,this.tb].forEach(t=>clearTimeout(t));
+    const opp={ name:'Mother Vex', accent:'#ff5d6c', glow:'#b06bff', line:'rgba(176,107,255,.45)', wash:'rgba(176,107,255,.28)', youth:50, cards:{}, st:this.newSt() };
+    for(let h=12;h>=1;h--) opp.cards[h]=this.POOL[Math.floor(Math.random()*this.POOL.length)];
+    const player={ name:'Seraphine', accent:'#4fd6c4', glow:'#e6c877', line:'rgba(79,214,196,.45)', wash:'rgba(230,200,119,.24)', youth:50, cards:{}, dooms:{}, st:this.newSt() };
+    this.uidc=0;
+    this.startTicker();
+    this.setState({ phase:'plan', quarter:0, player, opp, resolved:{}, turnPassed:false, playing:false, clash:null, result:null, matchLog:[], logOpen:{}, hour:12, hand:this.drawN(6), placed:{}, dragUid:null, dragSlot:null, fusedThisQuarter:false, timeBank:0, timerRunning:false, lightning:false }, ()=>this.enterPlan(0));
+  };
+
+  enterPlan(q){
+    this._lastSec=null; this._lastHM=null;
+    this.setState(s=>({ phase:'plan', quarter:q, hour:this.QUARTERS[q][0], placed:{}, dragUid:null, dragSlot:null, fusedThisQuarter:false, playing:false, clash:null,
+      hand:[...s.hand, ...this.drawN(3)], timeBank: q===0 ? 60 : Math.min(60, s.timeBank + 15), timerRunning:true }));
+    this.flashBanner(this.quarterBanner(q));
+    clearTimeout(this.tFlash); this.tFlash=setTimeout(()=>this.flash(), 350);
+  }
+
+  allowDrop=(e)=>{ if(e&&e.preventDefault) e.preventDefault(); };
+  onHandDragStart=(uid)=>{ this.setState({ dragUid:uid, dragSlot:null }); };
+  onSlotDragStart=(hour)=>{ this.setState({ dragSlot:hour, dragUid:null }); };
+  dragEnd=()=>{ this.setState({ dragUid:null, dragSlot:null }); };
+  cardAccent(inst){ return inst.col?inst.col.accent:this.elemInfo(this.CARDS[inst.id].elem).accent; }
+  hexToRgb(h){ h=(h||'#888888').replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+  hx(n){ return Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,'0'); }
+  blendCols(a,b){ const A=this.hexToRgb(a),B=this.hexToRgb(b); const m=[(A[0]+B[0])/2,(A[1]+B[1])/2,(A[2]+B[2])/2]; const accent='#'+this.hx(m[0])+this.hx(m[1])+this.hx(m[2]); const d='#'+this.hx(m[0]*0.22)+this.hx(m[1]*0.22)+this.hx(m[2]*0.22); const d2='#'+this.hx(m[0]*0.1)+this.hx(m[1]*0.1)+this.hx(m[2]*0.1); return { accent, line:'rgba('+Math.round(m[0])+','+Math.round(m[1])+','+Math.round(m[2])+',.5)', card:'linear-gradient(160deg,'+d+','+d2+')' }; }
+  metaInst(inst){ const m=this.meta(inst.id); if(inst.col){ m.accent=inst.col.accent; m.card=inst.col.card; m.line=inst.col.line; m.elemColor=inst.col.accent; } return m; }
+  metaColored(id,col){ const m=this.meta(id); if(col){ m.accent=col.accent; m.card=col.card; m.line=col.line; m.elemColor=col.accent; } return m; }
+  tapHand=(uid)=>{ this.audio(); const s=this.state, q=this.QUARTERS[s.quarter]; const empty=q.find(h=>!s.placed[h]); if(empty==null) return; const card=s.hand.find(c=>c.uid===uid); if(!card) return; this.sTick(); this.setState({ placed:{ ...s.placed, [empty]:card }, hand:s.hand.filter(c=>c.uid!==uid) }); };
+  tapSlot=(hour)=>{ this.audio(); const s=this.state; if(!s.placed[hour]) return; const card=s.placed[hour]; const placed={ ...s.placed }; delete placed[hour]; this.sTick(); this.setState({ placed, hand:[...s.hand, card] }); };
+  dropOnHand=(targetUid)=>{ const s=this.state, du=s.dragUid; if(du==null||du===targetUid||s.fusedThisQuarter){ this.dragEnd(); return; } const a=s.hand.find(c=>c.uid===du), b=s.hand.find(c=>c.uid===targetUid); if(!a||!b){ this.dragEnd(); return; } const res=this.fuse(a.id,b.id); if(!res){ this.dragEnd(); return; } this.sHeal(); const fused=this.mk(res); fused.col=this.blendCols(this.cardAccent(a),this.cardAccent(b)); const hand=s.hand.filter(c=>c.uid!==a.uid&&c.uid!==b.uid); hand.push(fused); this.setState({ hand, fusedThisQuarter:true, dragUid:null, dragSlot:null }); };
+  dropOnSlot=(hour)=>{ const s=this.state; if(s.dragSlot!=null){ const from=s.dragSlot; if(from===hour){ this.dragEnd(); return; } const placed={ ...s.placed }; const tmp=placed[hour]||null; placed[hour]=placed[from]; if(tmp) placed[from]=tmp; else delete placed[from]; this.sTick(); this.setState({ placed, dragSlot:null, dragUid:null }); return; } if(s.dragUid!=null){ const card=s.hand.find(c=>c.uid===s.dragUid); if(!card){ this.dragEnd(); return; } const placed={ ...s.placed }; const hand=s.hand.filter(c=>c.uid!==s.dragUid); if(placed[hour]) hand.push(placed[hour]); placed[hour]=card; this.sTick(); this.setState({ placed, hand, dragUid:null, dragSlot:null }); return; } this.dragEnd(); };
+  cast=()=>{
+    const s=this.state, q=this.QUARTERS[s.quarter];
+    if(!q.every(h=>s.placed[h])) return;
+    clearTimeout(this.lf);
+    const cards={ ...s.player.cards }, dooms={ ...(s.player.dooms||{}) }; q.forEach(h=>{ cards[h]=s.placed[h].id; if(this.CARDS[s.placed[h].id].doom) dooms[h]=this.doomVal(s.timeBank); });
+    this.setState({ player:{ ...s.player, cards, dooms }, placed:{}, dragUid:null, dragSlot:null, timerRunning:false, lightning:false, phase:'resolve', playing:true, hour:q[0] }, ()=>{ this.tStart=setTimeout(()=>this.step(),700); });
+  };
+  autoCast(){
+    const s=this.state, q=this.QUARTERS[s.quarter];
+    const hand=[...s.hand], placed={ ...s.placed };
+    q.forEach(h=>{ if(!placed[h]){ let card=hand.shift(); if(!card) card=this.mk(this.POOL[Math.floor(Math.random()*this.POOL.length)]); placed[h]=card; } });
+    const cards={ ...s.player.cards }, dooms={ ...(s.player.dooms||{}) }; q.forEach(h=>{ cards[h]=placed[h].id; if(this.CARDS[placed[h].id].doom) dooms[h]=this.doomVal(s.timeBank); });
+    clearTimeout(this.lf);
+    this.flashBanner({ title:'Time!', sub:'The sands run dry — the ritual seals itself.' }); this.sCurse();
+    this.setState({ player:{ ...s.player, cards, dooms }, hand, placed:{}, dragUid:null, dragSlot:null, timerRunning:false, lightning:false, phase:'resolve', playing:true, hour:q[0] }, ()=>{ this.tStart=setTimeout(()=>this.step(),900); });
+  }
+  tick(){
+    const s=this.state; if(s.phase!=='plan'||!s.timerRunning||s.paused) return;
+    const t=s.timeBank-0.25;
+    if(t<=0){ this.setState({ timeBank:0, timerRunning:false }); this.autoCast(); return; }
+    if(t<10){ const sec=Math.ceil(t); if(sec!==this._lastSec){ this._lastSec=sec; this.sTick(); } }
+    { const hm=Math.floor((60-Math.min(60,t))/5); if(this._lastHM!=null && hm>this._lastHM) this.flash(); this._lastHM=hm; }
+    this.setState({ timeBank:t });
+  }
+
+  toggleFast=()=>this.setState(s=>({ fast:!s.fast }));
+  toggleMute=()=>this.setState(s=>({ muted:!s.muted }));
+  toTitle=()=>{ [this.t1,this.t2,this.t3,this.tStart,this.tb,this.lt,this.lf,this.tFlash].forEach(t=>clearTimeout(t)); clearInterval(this.ticker); this.setState({ phase:'title', playing:false, clash:null, banner:null, lightning:false, timerRunning:false, paused:false, result:null }); };
+  togglePause=()=>this.setState(s=>({ paused:!s.paused }));
+  toggleLog=(k)=>this.setState(s=>({ logOpen:{ ...s.logOpen, [k]:!s.logOpen[k] } }));
+
+  countResolvedMoon(witch, moon){ let n=0; for(let hr=12;hr>=1;hr--){ if(this.state.resolved[hr]){ const c=witch.cards[hr]; if(c && this.CARDS[c] && this.CARDS[c].moon===moon) n++; } } return n; }
+
+  actionOf(cardId, st, counts, nextCardId, doomFuse){
+    const V=this.V, a={ moon:'neutral', drainOpp:0, rejSelf:0, selfDrain:0, curseOther:0, drainDownOther:0, saltSelf:false, channelSelf:false, progInc:false, consumeCurse:false };
+    if(!cardId || cardId==='__fizzle'){ a.fizzle=true; return a; }
+    const C=this.CARDS[cardId]; a.moon=C.moon;
+    const dd=st.drainDown>0; const halve=x=> dd?Math.ceil(x/2):x; const ch=st.channel?2:1;
+    const nextFull = nextCardId && this.CARDS[nextCardId] && this.CARDS[nextCardId].moon==='full';
+    const dv = doomFuse!=null?doomFuse:7;
+    switch(cardId){
+      case 'drain6':  a.drainOpp=halve(V.drainS)*ch; break;
+      case 'drain10': a.drainOpp=halve(V.drainM)*ch; break;
+      case 'drain16': a.drainOpp=halve(V.drainL)*ch; break;
+      case 'rej6':    a.rejSelf=V.rejS*ch; break;
+      case 'rej10':   a.rejSelf=V.rejM*ch; break;
+      case 'rej16':   a.rejSelf=V.rejL*ch; break;
+      case 'curse':   a.curseOther=V.curseTurns; break;
+      case 'weaken':  a.drainDownOther=V.weakenTurns; break;
+      case 'familiar':a.drainOpp=halve(V.familiar)*ch; a.drainDownOther=V.familiarTurns; break;
+      case 'progressive': a.drainOpp=halve(V.prog + V.prog*(st.prog||0))*ch; a.progInc=true; break;
+      case 'salem':   a.drainOpp=halve(V.salemPer*counts.foeNew)*ch; break;
+      case 'salt':    a.saltSelf=true; break;
+      case 'channel': a.channelSelf=true; break;
+      case 'coven':   a.rejSelf=(V.covenPer*counts.foeFull)*ch; break;
+      case 'consume': a.consumeCurse=true; a.rejSelf=(st.curse>0 ? st.curse*V.curseTick : 0); break;
+      case 'mirror':  a.mirror=true; break;
+      case 'devil':   if(nextFull){ a.selfDrain=V.devil*2; } else { a.drainOpp=V.devil; } break;
+      case 'moonslove': a.rejSelf = nextFull ? V.moonlove*2 : V.moonlove; break;
+      case 'doomstrike': a.drainOpp=halve(dv)*ch; break;
+      case 'doombless':  a.rejSelf=dv*ch; break;
+      case 'boon': a.drainOpp=halve(22)*ch; break;
+      case 'boonheal': a.rejSelf=18*ch; break;
+      case 'backfire': a.selfDrain=16; break;
+      case 'gift': a.drainOpp=-12; break;
+    }
+    return a;
+  }
+  reverse(x){ return { moon:x.moon, drainOpp:0, rejSelf:0, selfDrain:(x.selfDrain||0)+(x.drainOpp||0)+(x.rejSelf||0), curseOther:0, drainDownOther:0, saltSelf:false, channelSelf:false, progInc:x.progInc, consumeCurse:false, reversed:true }; }
+  nullify(x){ return { moon:x.moon, drainOpp:0, rejSelf:x.rejSelf, selfDrain:0, curseOther:0, drainDownOther:0, saltSelf:false, channelSelf:false, progInc:x.progInc, consumeCurse:false, absorbed:true }; }
+
+  resolveHour(h){
+    const S=this.state, P=S.player, O=S.opp;
+    const pSt={ ...P.st }, oSt={ ...O.st };
+    const pCard=P.cards[h], oCard=O.cards[h];
+
+    const bothWitch = h===3 && pCard==='witching' && oCard==='witching';
+    let pEff=pCard, oEff=oCard;
+    if(!bothWitch){
+      if(pCard==='witching') pEff = O.cards[3] || '__fizzle';
+      if(oCard==='witching') oEff = P.cards[3] || '__fizzle';
+    }
+    const pCounts={ foeNew:this.countResolvedMoon(O,'new'), foeFull:this.countResolvedMoon(O,'full') };
+    const oCounts={ foeNew:this.countResolvedMoon(P,'new'), foeFull:this.countResolvedMoon(P,'full') };
+
+    let A=this.actionOf(pEff, pSt, pCounts, P.cards[h-1], (P.dooms||{})[h]);
+    let B=this.actionOf(oEff, oSt, oCounts, O.cards[h-1], (O.dooms||{})[h]);
+    if(bothWitch){ A={ moon:'neutral', drainOpp:0, rejSelf:0, selfDrain:this.V.witchBoth, curseOther:0, drainDownOther:0 }; B={ ...A }; }
+
+    if(pCard==='mirror') B=this.reverse(B);
+    if(oCard==='mirror') A=this.reverse(A);
+    if(A.saltSelf) pSt.salt=true;
+    if(B.saltSelf) oSt.salt=true;
+    if(A.moon==='new' && oSt.salt){ A=this.nullify(A); oSt.salt=false; }
+    if(B.moon==='new' && pSt.salt){ B=this.nullify(B); pSt.salt=false; }
+
+    let pTick=0,oTick=0;
+    if(pSt.curse>0){ pTick=this.V.curseTick; pSt.curse--; }
+    if(oSt.curse>0){ oTick=this.V.curseTick; oSt.curse--; }
+    pSt.drainDown=Math.max(0,pSt.drainDown-1);
+    oSt.drainDown=Math.max(0,oSt.drainDown-1);
+
+    if(A.consumeCurse) pSt.curse=0;
+    if(B.consumeCurse) oSt.curse=0;
+    if(A.curseOther) oSt.curse=A.curseOther;
+    if(B.curseOther) pSt.curse=B.curseOther;
+    if(A.drainDownOther) oSt.drainDown=Math.max(oSt.drainDown,A.drainDownOther);
+    if(B.drainDownOther) pSt.drainDown=Math.max(pSt.drainDown,B.drainDownOther);
+    if(A.progInc) pSt.prog=(pSt.prog||0)+1;
+    if(B.progInc) oSt.prog=(oSt.prog||0)+1;
+    pSt.channel = !!A.channelSelf;
+    oSt.channel = !!B.channelSelf;
+
+    const esc = 1 + (12 - h) * this.V.escStep;
+    const pDelta = Math.round(((A.rejSelf||0) - (A.selfDrain||0) - (B.drainOpp||0))*esc - pTick);
+    const oDelta = Math.round(((B.rejSelf||0) - (B.selfDrain||0) - (A.drainOpp||0))*esc - oTick);
+    const newP=Math.max(0,Math.min(this.V.start, P.youth+pDelta));
+    const newO=Math.max(0,Math.min(this.V.start, O.youth+oDelta));
+
+    const flags={ absorbedA:A.absorbed, absorbedB:B.absorbed, reversedA:A.reversed, reversedB:B.reversed, bothWitch, curseP:!!B.curseOther, curseO:!!A.curseOther, consumeP:pCard==='consume', tickP:pTick, tickO:oTick, fizzleP:A.fizzle&&pCard==='witching', fizzleO:B.fizzle&&oCard==='witching' };
+    const collision = !!(flags.absorbedA||flags.absorbedB||flags.reversedA||flags.reversedB||flags.bothWitch||(pDelta===0&&oDelta===0));
+    const clash={ hour:h, roman:this.ROMAN[h], plyType:pCard, oppType:oCard, plyDelta:pDelta, oppDelta:oDelta, collision, esc,
+      note:this.noteFor(pCard,oCard,{ pDelta,oDelta,...flags }),
+      burst: flags.reversedA||flags.reversedB?'rgba(159,216,255,.55)':(flags.absorbedA||flags.absorbedB)?'rgba(255,216,115,.55)':(oDelta<0)?'rgba(255,106,127,.55)':'rgba(95,224,214,.5)' };
+
+    if(flags.bothWitch||flags.curseP||flags.curseO) this.sCurse();
+    else if(flags.absorbedA||flags.absorbedB) this.sWard();
+    else if(pDelta>0||oDelta>0) this.sHeal();
+    else if(pDelta<0||oDelta<0) this.sHit();
+
+    return { clash, player:{ ...P, youth:newP, st:pSt }, opp:{ ...O, youth:newO, st:oSt } };
+  }
+
+  noteFor(p,o,x){
+    if(x.bothWitch) return 'Both seize the Witching Hour — ten years torn from each!';
+    if(x.fizzleP||x.fizzleO) return 'The Witching Hour is not yet come; the working fizzles.';
+    if(x.absorbedA||x.absorbedB) return 'The salt circle drinks the black magic whole.';
+    if(x.reversedA||x.reversedB) return 'The mirror turns the working back upon its caster.';
+    if(x.consumeP && x.pDelta>0) return 'You devour the curse and reclaim its stolen years.';
+    if(x.curseP && x.curseO) return 'Two curses take root — the rot begins on both.';
+    if(x.curseP) return 'Her curse settles into you, gnawing two years an hour.';
+    if(x.curseO) return 'Your curse takes root in her, gnawing two years an hour.';
+    if(x.tickP&&x.tickO) return 'Old curses gnaw at both witches.';
+    if(x.pDelta<0 && x.oDelta<0) return 'Both witches wither this hour.';
+    if(x.pDelta>0 && x.oDelta<0) return 'You reclaim your years as hers bleed away.';
+    if(x.oDelta<0) return 'You strip the youth from Mother Vex.';
+    if(x.pDelta<0) return 'She tears the youth from your bones.';
+    if(x.pDelta>0) return 'Your lost years come flooding back.';
+    if(x.oDelta>0) return 'She drinks deep and grows younger.';
+    return 'The hour passes, quiet and cold.';
+  }
+
+  milestoneBanner(h){
+    if(h===6) return { title:'The Turn', sub:'Past six — half the candles drown in dark.' };
+    if(h===3) return { title:'The Witching Hour', sub:'The veiled hour comes due.' };
+    return null;
+  }
+  quarterBanner(q){ return [
+    { title:'The First Bell', sub:'' },
+    { title:'The Second Quarter', sub:'' },
+    { title:'The Third Quarter', sub:'' },
+    { title:'The Witching Hours', sub:'' },
+  ][q]; }
+
+  step(){
+    const h=this.state.hour, q=this.state.quarter, qh=this.QUARTERS[q];
+    const dur=(this.state.fast?900:1900) * (q===3?0.7:1);
+    this.setState({ clash:null });
+    this.t1=setTimeout(()=>{
+      const r=this.resolveHour(h); const mb=this.milestoneBanner(h);
+      if(mb) this.sBell();
+      this.setState(s=>({ clash:r.clash, player:r.player, opp:r.opp, resolved:{ ...s.resolved,[h]:true }, turnPassed: h<=6?true:s.turnPassed, matchLog:[...s.matchLog, {
+        roman:r.clash.roman,
+        ply:r.clash.plyType?this.CARDS[r.clash.plyType].name:'—', plyIc:r.clash.plyType?this.CARDS[r.clash.plyType].ic:null, plyDesc:r.clash.plyType?this.CARDS[r.clash.plyType].desc:'',
+        opp:r.clash.oppType?this.CARDS[r.clash.oppType].name:'—', oppIc:r.clash.oppType?this.CARDS[r.clash.oppType].ic:null, oppDesc:r.clash.oppType?this.CARDS[r.clash.oppType].desc:'',
+        plyAgeD:-r.clash.plyDelta, oppAgeD:-r.clash.oppDelta,
+        plyAge:Math.round(100-r.player.youth), oppAge:Math.round(100-r.opp.youth) }] }));
+      this.sSnuff();
+      if(r.player.youth<=0||r.player.youth>=100||r.opp.youth<=0||r.opp.youth>=100){ this.t3=setTimeout(()=>this.endGame(),dur*0.8); return; }
+      const idx=qh.indexOf(h);
+      this.t2=setTimeout(()=>{ if(idx<2){ this.setState({ hour:h-1 },()=>this.step()); } else { this.endQuarter(); } },dur);
+    },150);
+  }
+  endQuarter(){
+    const q=this.state.quarter;
+    if(q>=3){ this.midnight(); return; }
+    this.enterPlan(q+1);
+  }
+  endGame(){
+    const P=this.state.player,O=this.state.opp;
+    const pDead=P.youth<=0||P.youth>=100, oDead=O.youth<=0||O.youth>=100;
+    const die=(title,sub,win)=>{ this.stopTicker(); this.sBell(); this.setState({ phase:'over', playing:false, banner:null, lightning:false, timerRunning:false, result:{ title, sub, lost:!win } }); };
+    if(oDead && !pDead){
+      if(O.youth<=0) die('Ashes and Dust','Mother Vex withers to a heap of grey dust. You remain, terribly young.',true);
+      else die('Unmade','Mother Vex youths past the cradle and winks out of the world. You remain.',true);
+    } else if(pDead && !oDead){
+      if(P.youth<=0) die('You Are Undone','Your bones fold to powder. She steps over what is left of you, cackling.',false);
+      else die('Undone by Youth','You slip past childhood into unbeing — nothing left for her to age.',false);
+    } else this.finalTally();
+  }
+  midnight(){ this.sBell(); this.flashBanner({ title:'Midnight', sub:'The bargains come due.' }); this.setState({ clash:null }); this.t1=setTimeout(()=>this.finalTally(), this.state.fast?800:1500); }
+  finalTally(){
+    const P=this.state.player,O=this.state.opp; let title,sub;
+    let lost=false;
+    if(P.youth>O.youth){ title='The Younger Witch'; sub='As the last bell dies you are the fresher of the two — the years fell on her.'; }
+    else if(O.youth>P.youth){ title='Aged and Beaten'; sub='Midnight favours Mother Vex. The wrinkles are yours to keep.'; lost=true; }
+    else { title='Bound in Twilight'; sub='Neither gained on the other. Two ageless witches, forever circling.'; }
+    this.stopTicker();
+    this.setState({ phase:'over', playing:false, result:{ title, sub, lost }, banner:null, lightning:false, timerRunning:false });
+  }
+
+  icon(type,w){
+    const R=React.createElement, s=w||'100%';
+    const svg=(ch,e)=>R('svg',Object.assign({viewBox:'0 0 24 24',width:s,height:s,fill:'none',stroke:'currentColor','strokeWidth':1.6,strokeLinecap:'round',strokeLinejoin:'round'},e||{}),ch);
+    switch(type){
+      case 'drop': return svg([R('path',{key:1,d:'M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z'}),R('path',{key:2,d:'M9 13.5c0 1.9 1.4 3.4 3 3.4'})]);
+      case 'crescent': return svg([R('path',{key:1,d:'M20.5 14.5A8.5 8.5 0 1 1 11 4a6.6 6.6 0 0 0 9.5 10.5z'})]);
+      case 'spiral': return svg([R('path',{key:1,d:'M18 8a6 6 0 1 0 .6 5'}),R('path',{key:2,d:'M18 4v4h-4'})]);
+      case 'shield': return svg([R('path',{key:1,d:'M12 2l8 3v5.5c0 5-3.4 8.7-8 11.5-4.6-2.8-8-6.5-8-11.5V5z'}),R('path',{key:2,d:'M8.5 12l2.4 2.4L15.8 9.5'})]);
+      case 'bolt': return svg([R('path',{key:1,d:'M13 2L4 14h6l-1 8 9-12h-6z',fill:'currentColor',stroke:'none'})]);
+      case 'eye': return svg([R('path',{key:1,d:'M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z'}),R('circle',{key:2,cx:12,cy:12,r:3}),R('circle',{key:3,cx:12,cy:12,r:.9,fill:'currentColor'})]);
+      case 'mirror': return svg([R('path',{key:1,d:'M12 3v18'}),R('path',{key:2,d:'M9 7l-3 5 3 5'}),R('path',{key:3,d:'M15 7l3 5-3 5'})]);
+      case 'down': return svg([R('path',{key:1,d:'M12 4v13'}),R('path',{key:2,d:'M6 11l6 6 6-6'})]);
+      case 'flame': return svg([R('path',{key:1,d:'M12 3c3 4 5 6 5 9a5 5 0 0 1-10 0c0-1.6.6-2.9 1.6-3.8C10 9 11 7.4 12 3z'})]);
+      case 'stack': return svg([R('rect',{key:1,x:5,y:5,width:14,height:3,rx:1}),R('rect',{key:2,x:5,y:10.5,width:14,height:3,rx:1}),R('rect',{key:3,x:5,y:16,width:14,height:3,rx:1})]);
+      case 'star': return svg([R('path',{key:1,d:'M12 3l2.4 5.6 6 .5-4.6 4 1.4 5.9L12 21l-5.2 3 1.4-5.9-4.6-4 6-.5z'})]);
+      case 'skull': return svg([R('path',{key:1,d:'M6 11a6 6 0 1 1 12 0v3.5a1.5 1.5 0 0 1-1.5 1.5H16v2H8v-2H7.5A1.5 1.5 0 0 1 6 14.5z'}),R('circle',{key:2,cx:9.5,cy:11,r:1.4,fill:'currentColor'}),R('circle',{key:3,cx:14.5,cy:11,r:1.4,fill:'currentColor'})]);
+      case 'hourglass': return svg([R('path',{key:1,d:'M6 3h12M6 21h12M8 3l4 6 4-6M8 21l4-6 4 6'})]);
+      case 'leaf': return svg([R('path',{key:1,d:'M6 20C6 11 11 5 20 4c1 9-4 16-14 16z'}),R('path',{key:2,d:'M6.5 19.5C10 14 14 11 18 10'})]);
+      case 'wind': return svg([R('path',{key:1,d:'M3 8h10a2.6 2.6 0 1 0-2.6-2.6'}),R('path',{key:2,d:'M3 12h15a2.6 2.6 0 1 1-2.6 2.6'}),R('path',{key:3,d:'M3 16h8.5a2.2 2.2 0 1 1-2.2 2.2'})]);
+      default: return null;
+    }
+  }
+  propIcon(t){ const R=React.createElement; const svg=(ch)=>R('svg',{viewBox:'0 0 100 100',width:'100%',height:'100%',fill:'currentColor',stroke:'#8a80a8',strokeWidth:1.2,strokeLinecap:'round',strokeLinejoin:'round'},ch);
+    switch(t){
+      case 'cauldron': return svg([R('ellipse',{key:1,cx:50,cy:62,rx:34,ry:26}),R('rect',{key:2,x:12,y:46,width:76,height:10,rx:5}),R('path',{key:3,d:'M30 86l6-10',fill:'none',stroke:'#8a80a8',strokeWidth:4}),R('path',{key:4,d:'M70 86l-6-10',fill:'none',stroke:'#8a80a8',strokeWidth:4})]);
+      case 'candelabra': return svg([R('rect',{key:1,x:47,y:30,width:6,height:55}),R('path',{key:2,d:'M50 40 C30 40 24 34 24 22',fill:'none',stroke:'#8a80a8',strokeWidth:5}),R('path',{key:3,d:'M50 40 C70 40 76 34 76 22',fill:'none',stroke:'#8a80a8',strokeWidth:5}),R('rect',{key:4,x:21,y:12,width:6,height:12}),R('rect',{key:5,x:47,y:8,width:6,height:14}),R('rect',{key:6,x:73,y:12,width:6,height:12}),R('rect',{key:7,x:34,y:82,width:32,height:8,rx:3})]);
+      case 'bottles': return svg([R('path',{key:1,d:'M20 90V50c0-6 3-8 3-14v-8h8v8c0 6 3 8 3 14v40z'}),R('path',{key:2,d:'M44 90V44c0-7 4-9 4-16v-6h8v6c0 7 4 9 4 16v46z'}),R('path',{key:3,d:'M68 90V56c0-5 3-7 3-12v-6h7v6c0 5 3 7 3 12v34z'})]);
+      case 'skulls': return svg([R('path',{key:1,d:'M50 40a18 18 0 0 1 18 18v10a4 4 0 0 1-4 4h-3v6H39v-6h-3a4 4 0 0 1-4-4V58a18 18 0 0 1 18-18z'}),R('circle',{key:2,cx:43,cy:58,r:4,fill:'#0a0512'}),R('circle',{key:3,cx:57,cy:58,r:4,fill:'#0a0512'})]);
+      case 'bones': return svg([R('path',{key:1,d:'M24 30a6 6 0 1 0-6 8l40 26a6 6 0 1 0 8 6 6 6 0 1 0 6-8L32 36a6 6 0 1 0-8-6z'}),R('path',{key:2,d:'M76 30a6 6 0 1 1 6 8L42 64a6 6 0 1 1-8 6 6 6 0 1 1-6-8l40-26a6 6 0 1 1 8-6z',opacity:.6})]);
+      case 'raven': return svg([R('path',{key:1,d:'M20 60c14 4 24 2 34-6 4 8 12 12 24 10-6 6-4 14 4 18-16 4-30 0-40-10-8 6-18 6-26 2 6-4 8-8 0-14z'})]);
+      case 'herbs': return svg([R('path',{key:1,d:'M50 10v20',fill:'none',stroke:'#8a80a8',strokeWidth:3}),R('path',{key:2,d:'M50 30c-14 6-20 26-16 56',fill:'none',stroke:'#8a80a8',strokeWidth:2}),R('path',{key:3,d:'M50 30c14 6 20 26 16 56',fill:'none',stroke:'#8a80a8',strokeWidth:2}),R('path',{key:4,d:'M50 34c-8 10-10 30-8 50',fill:'none',stroke:'#8a80a8',strokeWidth:2}),R('path',{key:5,d:'M50 34c8 10 10 30 8 50',fill:'none',stroke:'#8a80a8',strokeWidth:2})]);
+      case 'book': return svg([R('path',{key:1,d:'M50 40c-10-8-24-8-34-4v40c10-4 24-4 34 4 10-8 24-8 34-4V36c-10-4-24-4-34 4z'}),R('path',{key:2,d:'M50 40v44',fill:'none',stroke:'#8a80a8',strokeWidth:2})]);
+      default: return null;
+    }
+  }
+  backIcon(){ const R=React.createElement; return R('svg',{viewBox:'0 0 24 24',width:'100%',height:'100%',fill:'none',stroke:'currentColor','strokeWidth':1.3},[R('circle',{key:1,cx:12,cy:12,r:8}),R('path',{key:2,d:'M12 4l2.4 5 5.6.2-4.4 3.6 1.6 5.4L12 20l-4.8 3.2 1.6-5.4L4.4 9.2 10 9z',transform:'scale(.72) translate(4.7,4.7)'})]);}
+  bigSkull(){ const R=React.createElement; const d='#0a0512';
+    return R('svg',{ viewBox:'0 0 120 122', width:400, height:404, fill:'currentColor' },[
+      R('path',{ key:'s', d:'M60 10C33 10 16 29 16 55c0 15 6 26 15 33v14c0 5 4 9 9 9h2l1 7h7l1-7h4l1 7h7l1-7h4l1 7h7l1-7h2c5 0 9-4 9-9V88c9-7 15-18 15-33 0-26-17-45-44-45z' }),
+      R('path',{ key:'el', d:'M30 50c2-8 11-12 20-9 6 2 9 7 7 13-2 7-11 11-20 8-6-2-9-6-7-12z', fill:d }),
+      R('path',{ key:'er', d:'M90 50c-2-8-11-12-20-9-6 2-9 7-7 13 2 7 11 11 20 8 6-2 9-6 7-12z', fill:d }),
+      R('path',{ key:'n', d:'M60 58l-7 15h14z', fill:d }),
+      R('rect',{ key:'t1', x:46, y:96, width:4, height:13, rx:1.5, fill:d }),
+      R('rect',{ key:'t2', x:53.5, y:96, width:4, height:13, rx:1.5, fill:d }),
+      R('rect',{ key:'t3', x:61, y:96, width:4, height:13, rx:1.5, fill:d }),
+      R('rect',{ key:'t4', x:68.5, y:96, width:4, height:13, rx:1.5, fill:d }),
+    ]);
+  }
+  silhouette(){ const R=React.createElement; return R('svg',{viewBox:'0 0 40 40',width:34,height:34,fill:'currentColor'},[R('path',{key:1,d:'M20 3l7 12H13z'}),R('rect',{key:2,x:8,y:14,width:24,height:2.4,rx:1.2}),R('circle',{key:3,cx:20,cy:23,r:5}),R('path',{key:4,d:'M11 38c0-6 4-9 9-9s9 3 9 9z'})]);}
+  floatNode(delta,key){ if(!delta) return null; const R=React.createElement,younger=delta<0; return R('div',{ key:'f'+key, style:{ position:'absolute', top:'-6px', left:'50%', transform:'translateX(-50%)', fontFamily:"'Cinzel',serif", fontSize:'20px', fontWeight:700, color:younger?'#7fffd0':'#ff8a8a', textShadow:'0 2px 6px #000', animation:'wsfloat 1.4s ease-out both', pointerEvents:'none' } }, (delta>0?'+':'')+delta); }
+
+  chipsFor(st){
+    const out=[];
+    if(st.curse>0) out.push({ label:'Cursed ·'+st.curse, color:'#ff9ad6', bg:'rgba(255,119,217,.12)', line:'rgba(255,119,217,.4)' });
+    if(st.drainDown>0) out.push({ label:'Weakened ·'+st.drainDown, color:'#b9b0d0', bg:'rgba(160,150,190,.12)', line:'rgba(160,150,190,.4)' });
+    if(st.salt) out.push({ label:'Warded', color:'#ffe08a', bg:'rgba(255,216,115,.12)', line:'rgba(255,216,115,.4)' });
+    if(st.channel) out.push({ label:'Channeling', color:'#7fe0d6', bg:'rgba(95,224,214,.12)', line:'rgba(95,224,214,.4)' });
+    return out;
+  }
+
+  pos(r,i){ const a=i*30*Math.PI/180; return { x:380+r*Math.sin(a), y:380-r*Math.cos(a) }; }
+
+  renderVals(){
+    const S=this.state;
+    const isTitle=S.phase==='title', isPlan=S.phase==='plan', isResolve=S.phase==='resolve', isOver=S.phase==='over';
+    const inGame=isPlan||isResolve; const P=S.player, O=S.opp;
+    const ageOf=y=>Math.round(100-y);
+    const fmtAge=n=> n>0?('+'+n):(n<0?(''+n):'0');
+    const ageCol=n=> n>0?'#ff8a8a':(n<0?'#7fffd0':'#8a7c66');
+    const logRows=(S.matchLog||[]).map((e,i)=>({ roman:e.roman, ply:e.ply, opp:e.opp,
+      plyIcon:e.plyIc?this.icon(e.plyIc,15):null, oppIcon:e.oppIc?this.icon(e.oppIc,15):null,
+      plyDesc:e.plyDesc||'', oppDesc:e.oppDesc||'',
+      plyOpen:!!S.logOpen[i+'p'], oppOpen:!!S.logOpen[i+'o'], anyOpen:!!(S.logOpen[i+'p']||S.logOpen[i+'o']),
+      plyToggle:()=>this.toggleLog(i+'p'), oppToggle:()=>this.toggleLog(i+'o'),
+      plyAgeText:fmtAge(e.plyAgeD), plyAgeCol:ageCol(e.plyAgeD),
+      oppAgeText:fmtAge(e.oppAgeD), oppAgeCol:ageCol(e.oppAgeD),
+      plyAge:e.plyAge, oppAge:e.oppAge }));
+    const cur=S.quarter;
+
+    const qHours=this.QUARTERS[cur]||[]; const planHour=isPlan?(qHours.find(h=>!((S.placed||{})[h]))||null):null;
+
+    const slots=[];
+    for(let i=0;i<12;i++){
+      const h=i===0?12:i;
+      const pcInst=(S.placed&&S.placed[h])?S.placed[h]:null;
+      const plyType=(P&&P.cards[h])||(pcInst?pcInst.id:null), oppType=O?O.cards[h]:null, resolved=!!S.resolved[h];
+      let plyMetaObj=plyType?this.meta(plyType):{};
+      const veilTable = pcInst && pcInst.mystery && !S.lightning;
+      const inQ=qHours.indexOf(h)>=0;
+      const oppOpen=!!(oppType&&inQ&&S.lightning);
+      const oppMetaObj=oppType?this.meta(oppType):{};
+      const isPlanHour=isPlan&&planHour===h, isResolveHour=isResolve&&S.hour===h&&S.playing;
+      const op=this.pos(228,i); const lit=!resolved;
+      slots.push({ hour:h, roman:this.ROMAN[h], num:this.pos(292,i), opp:op, ply:this.pos(118,i), plyStack:{ x:op.x, y:op.y+9 }, candle:this.pos(350,i),
+        numColor:(isPlanHour||isResolveHour)?'#fff2cf':(inQ&&isPlan)?'rgba(255,216,115,.85)':'rgba(230,200,119,.5)',
+        numOpacity: lit?1:0.4, lit, snuffed:resolved,
+        plyPlaced:!!plyType, plyMeta:plyMetaObj, plyIcon:plyType?(veilTable?this.icon('star'):this.cardIcon(plyType)):null, plyCardBg:resolved?'linear-gradient(150deg,#120a1c,#070410)':(veilTable?'linear-gradient(160deg,#1a1030,#0c0818)':(plyMetaObj.card||'')), plyCardBorder:resolved?'rgba(90,70,120,.22)':(veilTable?'rgba(198,168,240,.55)':(plyMetaObj.accent||'')), plyIconColor:resolved?'rgba(120,100,150,.3)':(veilTable?'#c6a8f0':(plyMetaObj.accent||'')),
+        oppDark:!!(oppType&&!resolved), oppReveal:!!(oppType&&inQ&&!resolved), oppRevealOpacity:S.lightning?1:0, oppGhost:!!(oppType&&resolved), oppMeta:oppMetaObj, oppIcon:oppType?this.cardIcon(oppType):null, oppGhostIcon:resolved?(oppType?this.cardIcon(oppType):null):null,
+        oppShadow: S.lightning ? ('0 0 18px '+(oppMetaObj.line||'rgba(255,255,255,.4)')+', 0 4px 10px rgba(0,0,0,.5)') : '0 4px 10px rgba(0,0,0,.55)',
+        backOpacity: 0.5, flameGlow:'#ffb347' });
+    }
+
+    const c=S.clash; let reveal=null, showReveal=false;
+    const dtxt=n=>n>0?('+'+n+' yrs'):n<0?(n+' yrs'):'no change';
+    const dcol=n=>n>0?'#ff8a8a':n<0?'#7fffd0':'#9c8e76';
+    if(c&&isResolve){ const esc=c.esc||1; showReveal=true; reveal={ roman:c.roman,
+      plyMeta:this.meta(c.plyType), plyIcon:this.cardIcon(c.plyType),
+      oppMeta:this.meta(c.oppType), oppIcon:this.cardIcon(c.oppType),
+      note:c.note, plyDeltaText:dtxt(-c.plyDelta), plyDeltaColor:dcol(-c.plyDelta), oppDeltaText:dtxt(-c.oppDelta), oppDeltaColor:dcol(-c.oppDelta), burstColor:c.burst,
+      collision:!!c.collision, showEsc:esc>1.12, escText:'The hour deepens · stakes ×'+esc.toFixed(2),
+      sparks:[0,45,90,135,180,225,270,315].map(a=>({ rot:'rotate('+a+'deg)' })) }; }
+
+    const pChips=P?this.chipsFor(P.st):[], oChips=O?this.chipsFor(O.st):[];
+
+    const placedM=S.placed||{};
+    const slots3=qHours.map(h=>{ const pc=placedM[h]; const m=pc?this.metaInst(pc):{}; return { hour:h, roman:this.ROMAN[h], filled:!!pc, empty:!pc, name:pc?this.CARDS[pc.id].name:'', meta:m, icon:pc?this.cardIcon(pc.id):null, veiled:!!(pc&&pc.mystery), veilOpacity:S.lightning?0:1, veilIcon:this.icon('star'), drag:pc?'true':'false', onClick:()=>this.tapSlot(h), onDrop:()=>this.dropOnSlot(h), onDragStart:()=>this.onSlotDragStart(h), onDragEnd:this.dragEnd }; });
+    const handCards=(S.hand||[]).map(c=>{
+      const isDoom=!!this.CARDS[c.id].doom, isMyst=!!c.mystery;
+      const base={ uid:c.uid, onClick:()=>this.tapHand(c.uid), onDragStart:()=>this.onHandDragStart(c.uid), onDrop:this.dragEnd, onDragEnd:this.dragEnd, lift:'translateY(0)' };
+      const m=this.metaInst(c);
+      if(isMyst){
+        return Object.assign(m, { icon:this.cardIcon(c.id), short:this.CARDS[c.id].desc, borderCol:'#c6a8f0', glow:'0 8px 20px rgba(0,0,0,.45), 0 0 15px rgba(198,168,240,.55)', showBadge:S.lightning, badgeText:'OMEN', badgeBg:'linear-gradient(180deg,#b892ff,#6a4bbf)', veiled:true, veilOpacity:S.lightning?0:1, veilIcon:this.icon('star') }, base);
+      }
+      if(isDoom){
+        const mult=this.doomMult(S.timeBank), val=this.doomVal(S.timeBank);
+        const short=(c.id==='doomstrike'?('Add '+val+' to her age'):('Shed '+val+' years'))+' — fades as the clock falls';
+        const dbg = mult>=3 ? 'linear-gradient(180deg,#ffe08a,#e0a02a)' : mult>=1.5 ? 'linear-gradient(180deg,#ffb060,#d9542a)' : 'linear-gradient(180deg,#ff8a7a,#b8302a)';
+        return Object.assign(m, { icon:this.cardIcon(c.id), short, borderCol:'#ff8a4d', glow:'0 8px 22px rgba(0,0,0,.45), 0 0 16px rgba(255,120,60,.55)', showBadge:true, badgeText:'× '+mult.toFixed(1), badgeBg:dbg }, base);
+      }
+      return Object.assign(m, { icon:this.cardIcon(c.id), short:this.CARDS[c.id].desc, borderCol:m.line, glow:'0 8px 20px rgba(0,0,0,.45)', showBadge:false, badgeText:'', badgeBg:'' }, base);
+    });
+    const allPlaced=qHours.length>0 && qHours.every(h=>placedM[h]);
+    const secs=Math.max(0,Math.ceil(S.timeBank||0)); const timeText=Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0');
+    const timerLow=(S.timeBank||0)<10 && S.timerRunning;
+    const dialSecs=Math.min(60,secs); const secHandDeg=-((60-dialSecs)/60)*360;
+    const castBg=allPlaced?'linear-gradient(180deg,#f4e0a6,#d9a94e)':'linear-gradient(180deg,#2c2740,#221d33)';
+    const castColor=allPlaced?'#160a26':'#6a5c78'; const castCursor=allPlaced?'pointer':'not-allowed'; const castShadow=allPlaced?'0 8px 26px rgba(217,169,78,.32)':'none';
+
+    const propDefs=[
+      { t:'candelabra', x:'5%', y:'11%', w:70, rot:'rotate(-4deg)' },
+      { t:'bottles', x:'88%', y:'13%', w:78, rot:'rotate(3deg)' },
+      { t:'cauldron', x:'3%', y:'60%', w:120, rot:'' },
+      { t:'skulls', x:'92%', y:'62%', w:92, rot:'rotate(-6deg)' },
+      { t:'book', x:'11%', y:'84%', w:96, rot:'rotate(2deg)' },
+      { t:'raven', x:'84%', y:'85%', w:82, rot:'' },
+      { t:'herbs', x:'50%', y:'3%', w:58, rot:'' },
+      { t:'bones', x:'46%', y:'92%', w:104, rot:'rotate(4deg)' },
+    ];
+    const props=propDefs.map(p=>({ x:p.x, y:p.y, w:p.w, tf:'translate(-50%,-50%) '+p.rot, node:this.propIcon(p.t) }));
+
+    return {
+      isTitle, isPlan, isResolve, inGame, isOver,
+      phaseLabel:'Quarter '+(cur+1)+' of 4 · '+(isPlan?'Plan':'Casting'),
+      muteLabel:S.muted?'Sound: off':'Sound: on',
+      speedLabel:S.fast?'Slow the hands':'Hasten the hands',
+      lightning:S.lightning, finalGear:inGame&&cur===3,
+      floorOpacity:S.lightning?0.55:0.18, propOpacity:S.lightning?0.6:0.12,
+      envFilter:S.lightning?'brightness(1.7) saturate(1.1)':'brightness(1)',
+      scrimOpacity:S.lightning?0.14:0.82, props,
+      legend:[
+        { label:'Offense', color:'#ff6a7f', line:'rgba(255,106,127,.5)' },
+        { label:'Defense', color:'#5fe0d6', line:'rgba(95,224,214,.5)' },
+        { label:'Gambit', color:'#c6b0e6', line:'rgba(198,176,230,.5)' },
+      ],
+      showSkull:!!(S.result&&S.result.lost), skullNode:this.bigSkull(),
+      elementTypes:[
+        { name:'Offense', accent:'#ff7a9c', line:'rgba(255,122,156,.3)', icon:this.icon('drop',28), blurb:'Red magic. Drain her years, curse, weaken, and scale up your attacks.' },
+        { name:'Defense', accent:'#7fe0d6', line:'rgba(127,224,214,.3)', icon:this.icon('crescent',28), blurb:'Teal magic. Reclaim your years, ward with salt, mirror her, double your next card.' },
+        { name:'Gambit', accent:'#cbb6e6', line:'rgba(203,182,230,.3)', icon:this.icon('star',28), blurb:"Violet magic. Devil's Bargain, Moon's Love, the Witching Hour, and lit Doom cards." },
+      ],
+      bells:[
+        { num:'XII', name:'First Bell', desc:'The duel begins in darkness.' },
+        { num:'VI',  name:'The Turn', desc:'Half the candles are drowned.' },
+        { num:'III', name:'Witching Hour', desc:'The Final Countdown begins.' },
+        { num:'0',   name:'Midnight', desc:'The younger witch wins.' },
+      ],
+      slots, backIcon:this.backIcon(),
+      quarterTitle:this.quarterBanner(cur).title, quarterHoursLabel:qHours.map(h=>this.ROMAN[h]).join(' · '),
+      showReveal, reveal, showBanner:!!S.banner, banner:S.banner||{}, playing:S.playing,
+      handDeg:-(12 - S.hour) * 30, handLen:150, showSecond:isPlan&&S.timerRunning, secHandDeg,
+      plySil:this.silhouette(), oppSil:this.silhouette(),
+      player:P?{ name:P.name, accent:P.accent, glow:P.glow, line:P.line, wash:P.wash, youth:P.youth, youthPct:Math.max(0,Math.min(100,P.youth)), age:ageOf(P.youth), lifePct:Math.max(0,Math.min(100,ageOf(P.youth))), chips:pChips, hasChips:pChips.length>0, floatNode:(S.clash&&S.clash.plyDelta)?this.floatNode(-S.clash.plyDelta,S.clash.hour):null }:{},
+      opp:O?{ name:O.name, accent:O.accent, glow:O.glow, line:O.line, wash:O.wash, youth:O.youth, youthPct:Math.max(0,Math.min(100,O.youth)), age:ageOf(O.youth), lifePct:Math.max(0,Math.min(100,ageOf(O.youth))), chips:oChips, hasChips:oChips.length>0, floatNode:(S.clash&&S.clash.oppDelta)?this.floatNode(-S.clash.oppDelta,'o'+S.clash.hour):null }:{ name:'Mother Vex' },
+      slots3, handCards, allPlaced, timeText, timerLow, timerCalm:!timerLow,
+      timerColor:timerLow?'#ff6a6a':'#e6c877', hourglass:this.icon('hourglass',15),
+      cast:this.cast, allowDrop:this.allowDrop, castBg, castColor, castCursor, castShadow,
+      result:S.result||{}, logRows, startGame:this.startGame, toTitle:this.toTitle, togglePause:this.togglePause, paused:S.paused, pauseLabel:S.paused?'Resume':'Pause', toggleFast:this.toggleFast, toggleMute:this.toggleMute,
+    };
+  }
+}
+</script>
+</body>
+</html>
